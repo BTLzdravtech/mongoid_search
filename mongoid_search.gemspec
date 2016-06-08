@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   
   s.add_dependency("mongoid", [">= 3.0.0"])
   s.add_dependency("fast-stemmer", ["~> 1.0.0"])
+  s.add_dependency("htmlentities", [">= 4.3.4"])
   s.add_development_dependency("database_cleaner", [">= 0.8.0"])
   s.add_development_dependency("rake", ["~> 0.8.7"])
   s.add_development_dependency("rspec", ["~> 2.4"])

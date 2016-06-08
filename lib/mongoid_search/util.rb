@@ -30,6 +30,8 @@ module Mongoid::Search::Util
   end
 
   def self.normalize_keywords(text)
+    require 'htmlentities'
+    coder = HTMLEntities.new
     ligatures           = Mongoid::Search.ligatures
     punctuation_pattern = Mongoid::Search.punctuation_pattern
     ignore_list         = Mongoid::Search.ignore_list
@@ -37,6 +39,7 @@ module Mongoid::Search::Util
     stem_proc           = Mongoid::Search.stem_proc
 
     return [] if text.blank?
+    text = coder.decode(text)
     text = text.to_s.
       mb_chars.
       downcase.

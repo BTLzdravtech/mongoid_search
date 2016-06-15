@@ -30,7 +30,6 @@ module Mongoid::Search::Util
   end
 
   def self.normalize_keywords(text)
-    include ActionView::Helpers::SanitizeHelper
     require 'htmlentities'
     coder = HTMLEntities.new
     ligatures           = Mongoid::Search.ligatures
@@ -40,17 +39,16 @@ module Mongoid::Search::Util
     stem_proc           = Mongoid::Search.stem_proc
 
     return [] if text.blank?
-    text = strip_tags(text)
+    text = ActionController::Base.helpers.strip_tags(text)
     text = coder.decode(text)
     text = text.to_s.
-      mb_chars.
-      downcase.
-      to_s.
-      gsub(punctuation_pattern, ' '). # strip punctuation
-      gsub(/[#{ligatures.keys.join("")}]/) {|c| ligatures[c]}.
-      gsub(/a\\\d/, '').
-      split(' ').
-      reject { |word| word.size < Mongoid::Search.minimum_word_size }
+        mb_chars.
+        parameterize(' ').
+        to_s.
+        gsub(punctuation_pattern, ' '). # strip punctuation
+        gsub(/[#{ligatures.keys.join("")}]/) {|c| ligatures[c]}.
+        split(' ').
+        reject { |word| word.size < Mongoid::Search.minimum_word_size }
     text = text.reject { |word| ignore_list.include?(word) } unless ignore_list.blank?
     text = text.map(&stem_proc) if stem_keywords
     text

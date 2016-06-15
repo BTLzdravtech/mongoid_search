@@ -30,6 +30,7 @@ module Mongoid::Search::Util
   end
 
   def self.normalize_keywords(text)
+    include ActionView::Helpers::SanitizeHelper
     require 'htmlentities'
     coder = HTMLEntities.new
     ligatures           = Mongoid::Search.ligatures
@@ -39,6 +40,7 @@ module Mongoid::Search::Util
     stem_proc           = Mongoid::Search.stem_proc
 
     return [] if text.blank?
+    text = strip_tags(text)
     text = coder.decode(text)
     text = text.to_s.
       mb_chars.

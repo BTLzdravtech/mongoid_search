@@ -63,6 +63,10 @@ module Mongoid::Search
   mattr_accessor :minimum_word_size
   @@minimum_word_size = 2
 
+  # Internal name to ignore
+  mattr_accessor :internal_name_to_ignore
+  @@internal_name_to_ignore = []
+
   def self.setup
     yield self
   end

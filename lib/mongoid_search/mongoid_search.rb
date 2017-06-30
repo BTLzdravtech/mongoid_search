@@ -125,7 +125,11 @@ module Mongoid::Search
   end
 
   def set_keywords
-    self._keywords = Mongoid::Search::Util.keywords(self, self.search_fields).
-      flatten.reject{|k| k.nil? || k.empty?}.uniq.sort
+    if respond_to? :internal_name
+      self._keywords = Mongoid::Search::Util.keywords(self, self.search_fields).flatten.reject{|k| k.nil? || k.empty?}.uniq.sort if Mongoid::Search.internal_name_to_ignore.exclude?(internal_name)
+    else
+      self._keywords = Mongoid::Search::Util.keywords(self, self.search_fields).
+        flatten.reject{|k| k.nil? || k.empty?}.uniq.sort
+    end
   end
 end
